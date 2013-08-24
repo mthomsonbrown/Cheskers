@@ -17,7 +17,7 @@ public class GameScreen extends Screen {
 
 	private Chip userChip;
 
-	private Image yellowChip, redChip;
+	private Image yellowChip, redChip; 
 	private Board mBoard;
 
 	public GameScreen(Game game) {
