@@ -22,7 +22,7 @@ public class GameScreen extends Screen {
 
 	public GameScreen(Game game) {
 		super(game);
-		initChip();
+		initChip(); 
 		mBoard = new Board();
 	}
 

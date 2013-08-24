@@ -1,7 +1,5 @@
 package com.ookamijin.cheskers;
 
-import android.util.Log;
-
 import com.ookamijin.framework.Input.TouchEvent;
 
 public class Board {
