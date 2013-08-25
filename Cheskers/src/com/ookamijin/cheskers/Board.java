@@ -190,21 +190,21 @@ public class Board {
 	}
 
 	public boolean tileHasRed(Coord coord) {
-		if (mTile[coord.x][coord.y].hasNothing())
+		if (mTile[coord.x][coord.y].hasRed())
 			return true;
 		return false;
 	}
 
 	public boolean tileHasYellow(Coord coord) {
 
-		if (mTile[coord.x][coord.y].hasNothing())
+		if (mTile[coord.x][coord.y].hasYellow())
 			return true;
 		return false;
 	}
 
 	public void setTileHasNothing(Coord coord) {
 		mTile[coord.x][coord.y].setHasNothing(true);
-
+		mTile[coord.x][coord.y].setChipIndex(0);
 	}
 
 	public void setTileHasYellow(Coord coord) {
@@ -219,6 +219,11 @@ public class Board {
 
 	public void setTileChipIndex(Coord coord, int id) {
 		mTile[coord.x][coord.y].setChipIndex(id);
+
+	}
+	
+	public int getTileChipIndex(Coord coord) {
+		return mTile[coord.x][coord.y].getChipIndex();
 
 	}
 

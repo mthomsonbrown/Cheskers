@@ -82,9 +82,11 @@ public class GameScreen extends Screen {
 				if (touchedBoard(event)) {
 					Coord coord = mBoard.getTileIndex(event);
 
-					if (coord.isValid()) {
-						int tNum[] = { -1, -1 };
-						coord.parse(tNum);
+					int tNum[] = { -1, -1 };
+					coord.parse(tNum);
+
+					if (coord.isValid()
+							&& !mBoard.mTile[tNum[0]][tNum[1]].hasNothing()) {
 
 						if (mBoard.mTile[tNum[0]][tNum[1]].hasYellow()) {
 							userChip = yellowChips[mBoard.mTile[tNum[0]][tNum[1]]
@@ -95,6 +97,7 @@ public class GameScreen extends Screen {
 						}
 
 						if (mBoard.mTile[tNum[0]][tNum[1]].hasRed()) {
+							debug("Hes red");
 							userChip = redChips[mBoard.mTile[tNum[0]][tNum[1]]
 									.getChipIndex()];
 							userChip.setId(mBoard.mTile[tNum[0]][tNum[1]]
@@ -134,9 +137,10 @@ public class GameScreen extends Screen {
 			if (event.type == TouchEvent.TOUCH_UP) {
 
 				Coord chipEndPos = new Coord(0, 0);
+				ArrayList<Coord> targets = new ArrayList<Coord>();
 
 				if (legalMove()) {
-					if (player.isValid(tilePath, userChip)) {
+					if (player.isValid(tilePath, userChip, targets)) {
 
 						chipEndPos = mBoard.getTileCenter(tilePath.get(tilePath
 								.size() - 1));
@@ -169,8 +173,10 @@ public class GameScreen extends Screen {
 						debug("invalid move");
 					}
 				} else {
-					chipEndPos = mBoard.getTileCenter(tilePath.get(0));
-					userChip.setCoords(chipEndPos);
+					if (tilePath.size() > 0) {
+						chipEndPos = mBoard.getTileCenter(tilePath.get(0));
+						userChip.setCoords(chipEndPos);
+					}
 					debug("illegal move!");
 
 				}
@@ -185,14 +191,37 @@ public class GameScreen extends Screen {
 
 				if (endTurn) {
 					if (player.isHet) {
+						take(targets);
 						player = homPlay;
-					} else
+					} else {
+						take(targets);
 						player = hetPlay;
+					}
 					endTurn = false;
 				}
 			}
 
 		}
+	}
+
+	private void take(ArrayList<Coord> targets) {
+		debug("intake targets size is " + targets.size());
+		Chip tChip;
+		for (int i = 0; i < targets.size(); ++i) {
+
+			if (mBoard.tileHasRed(targets.get(i))) {
+				debug("IT was reDD!");
+				tChip = redChips[mBoard.getTileChipIndex(targets.get(i))];
+				tChip.setCenterX(player.poolX);
+				tChip.setCenterY(player.poolY);
+			} else {
+				tChip = yellowChips[mBoard.getTileChipIndex(targets.get(i))];
+				tChip.setCenterX(player.poolX);
+				tChip.setCenterY(player.poolY);
+			}
+			mBoard.setTileHasNothing(targets.get(i));
+		}
+
 	}
 
 	private boolean legalMove() {
@@ -229,6 +258,10 @@ public class GameScreen extends Screen {
 					redChips[i].getCenterY() - 40);
 		}
 		g.drawString(player.name, 10, 30, paint);
+		g.drawString("" + hetPlay.score, hetPlay.scoreLocation.x,
+				hetPlay.scoreLocation.y, paint);
+		g.drawString("" + homPlay.score, homPlay.scoreLocation.x,
+				homPlay.scoreLocation.y, paint);
 	}
 
 	private void displayBoardStatus() {
@@ -242,6 +275,10 @@ public class GameScreen extends Screen {
 			debug(line);
 			line = "";
 		}
+
+	}
+
+	public void takeYellow(int index) {
 
 	}
 
