@@ -2,6 +2,8 @@ package com.ookamijin.cheskers;
 
 import java.util.List;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Log;
 
 import com.ookamijin.framework.Game;
@@ -17,13 +19,22 @@ public class GameScreen extends Screen {
 
 	private Chip userChip;
 
-	private Image yellowChip, redChip; 
+	private Image yellowChip, redChip;
 	private Board mBoard;
+	private Paint paint;
+	private Player player;
 
 	public GameScreen(Game game) {
 		super(game);
-		initChip(); 
+		player = new Player();
+		initChip();
 		mBoard = new Board();
+		
+		paint = new Paint();
+		paint.setTextSize(20);
+		paint.setTextAlign(Paint.Align.LEFT);
+		paint.setAntiAlias(true);
+		paint.setColor(Color.BLACK);
 	}
 
 	private void initChip() {
@@ -57,13 +68,31 @@ public class GameScreen extends Screen {
 			if (event.type == TouchEvent.TOUCH_DOWN) {
 
 				if (touchedBoard(event)) {
-					int tNum = mBoard.getTileIndex(event);
-					if (mBoard.mTile[tNum].hasYellow()) {
-						userChip = yellowChips[mBoard.mTile[tNum]
-								.getChipIndex()];
-					}
-					if (mBoard.mTile[tNum].hasRed()) {
-						userChip = redChips[mBoard.mTile[tNum].getChipIndex()];
+					int tNum[] = mBoard.getTileIndex(event);
+					debug("tile is " + tNum[0] + ", " + tNum[1]);
+
+					if (tNum[0] != -1) {
+
+						debug("Tile color is yellow is "
+								+ mBoard.mTile[tNum[0]][tNum[1]].hasYellow());
+
+						if (mBoard.mTile[tNum[0]][tNum[1]].hasYellow()) {
+							userChip = yellowChips[mBoard.mTile[tNum[0]][tNum[1]]
+									.getChipIndex()];
+
+							debug("user chip is yellow number "
+									+ mBoard.mTile[tNum[0]][tNum[1]]
+											.getChipIndex());
+						}
+
+						if (mBoard.mTile[tNum[0]][tNum[1]].hasRed()) {
+							userChip = redChips[mBoard.mTile[tNum[0]][tNum[1]]
+									.getChipIndex()];
+
+							debug("user chip is red number "
+									+ mBoard.mTile[tNum[0]][tNum[1]]
+											.getChipIndex());
+						}
 					}
 				}
 			}
@@ -98,6 +127,9 @@ public class GameScreen extends Screen {
 
 	@Override
 	public void paint(float deltaTime) {
+		
+		
+		
 		Graphics g = game.getGraphics();
 		g.drawImage(Assets.background, 0, 0);
 		for (int i = 0; i < 16; ++i) {
@@ -106,6 +138,7 @@ public class GameScreen extends Screen {
 			g.drawImage(redChip, redChips[i].getCenterX() - 40,
 					redChips[i].getCenterY() - 40);
 		}
+		g.drawString(player.name, 10, 30, paint);
 	}
 
 	@Override

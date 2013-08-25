@@ -8,56 +8,62 @@ public class Board {
 	public static int x[] = { 200, 280, 360, 440, 520, 600 };
 	public static int y[] = { 40, 120, 200, 280, 360, 440 };
 
-	/**
-	 * tiles of the board go left to right, top to bottom, starting with 0, and
-	 * ending with 35
-	 */
-	public Tile mTile[];
+	public Tile mTile[][];
 
 	public Board() {
 
-		mTile = new Tile[36];
-
+		mTile = new Tile[6][6];
 		int tNum = 0;
-		for (int i = 0; i < 6; ++i) {
 
-			for (int j = 0; j < 6; ++j) {
-				mTile[tNum] = new Tile(x[j], y[i]);
-				++tNum;
+		// populates the tile array with coordinate information
+		for (int j = 0; j < 6; ++j) {
+			for (int i = 0; i < 6; ++i) {
+				mTile[i][j] = new Tile(x[i], y[j]);
 			}
 		}
 
-		// initial board layout
-		for (int i = 0; i < 6; ++i) {
-			mTile[i].setHasYellow(true);
-			mTile[i].setChipIndex(i);
-			mTile[i + 24].setHasYellow(true);
-			mTile[i + 24].setChipIndex(i + 10);
+		// initial board layout colors
+		for (int j = 0; j < 6; ++j) {
+			for (int i = 0; i < 6; ++i) {
 
-			mTile[i + 6].setHasRed(true);
-			mTile[i + 6].setChipIndex(i);
-			mTile[i + 30].setHasRed(true);
-			mTile[i + 30].setChipIndex(i + 10);
+				switch (j) {
+				case 0:
+				case 2:
+				case 4:
+					mTile[i][j].setHasYellow(true);
 
-			if (i != 2 && i != 3) {
-				mTile[i + 12].setHasYellow(true);
+					break;
+				case 1:
+				case 3:
+				case 5:
+					mTile[i][j].setHasRed(true);
+					break;
+				}
 
-				mTile[i + 18].setHasRed(true);
+				// TODO don't know if this will work correctly
+				if (j == 2 && i == 2 || j == 2 && i == 3 || j == 3 && i == 2
+						|| j == 3 && i == 3) {
+					mTile[i][j].setHasNothing(true);
+				}
 			}
-
+		}
+		//initialize chip ids
+		int yellow = 0;
+		int red = 0;
+		for (int j = 0; j < 6; ++j) {
+			for (int i = 0; i < 6; ++i) {
+				
+				if(mTile[i][j].hasYellow()) {
+					mTile[i][j].setChipIndex(yellow);
+					++yellow;
+				}
+				if(mTile[i][j].hasRed()) {
+					mTile[i][j].setChipIndex(red);
+					++red;
+				}
+			}
 		}
 
-		// couldn't figure out how to fit these in the for loop...
-		mTile[12].setChipIndex(6);
-		mTile[13].setChipIndex(7);
-		mTile[16].setChipIndex(8);
-		mTile[17].setChipIndex(9);
-		
-		mTile[18].setChipIndex(6);
-		mTile[19].setChipIndex(7);
-		mTile[22].setChipIndex(8);
-		mTile[23].setChipIndex(9);
-		
 	}
 
 	public static int topInitX(int index) {
@@ -156,14 +162,19 @@ public class Board {
 		return 0;
 	}
 
-	public int getTileIndex(TouchEvent event) {
+	public int[] getTileIndex(TouchEvent event) {
 
-		for (int i = 0; i < mTile.length; ++i) {
-			if (mTile[i].inBounds(event)) {
-				return i;
+		int coords[] = { -1, -1 };
+		for (int j = 0; j < 6; ++j) {
+			for (int i = 0; i < 6; ++i) {
+				if (mTile[i][j].inBounds(event)) {
+					coords[0] = i;
+					coords[1] = j;
+					return coords;
+				}
 			}
 		}
-		return -1;
+		return coords;
 	}
 
 }
