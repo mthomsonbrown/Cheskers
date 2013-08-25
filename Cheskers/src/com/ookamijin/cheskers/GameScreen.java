@@ -26,13 +26,19 @@ public class GameScreen extends Screen {
 	private Player player;
 	private ArrayList<Coord> tilePath;
 
+	private PlayerHet hetPlay;
+	private PlayerHom homPlay;
+	private boolean endTurn;
+
 	public GameScreen(Game game) {
 		super(game);
 		initChip();
 		mBoard = new Board();
 
 		// TODO hard coded to start with hom
-		player = new PlayerHom(mBoard);
+		hetPlay = new PlayerHet(mBoard);
+		homPlay = new PlayerHom(mBoard);
+		player = hetPlay;
 
 		paint = new Paint();
 		paint.setTextSize(20);
@@ -94,7 +100,7 @@ public class GameScreen extends Screen {
 							userChip.setId(mBoard.mTile[tNum[0]][tNum[1]]
 									.getChipIndex());
 							tilePath.add(coord);
-						} 
+						}
 					}
 				}
 			}
@@ -153,6 +159,7 @@ public class GameScreen extends Screen {
 									userChip.getId());
 						}
 
+						endTurn = true;
 						debug("valid move!");
 
 					} else {
@@ -172,8 +179,17 @@ public class GameScreen extends Screen {
 					debug("tilePath " + j + " is " + tilePath.get(j).x + ", "
 							+ tilePath.get(j).y);
 				}
+				debug("Score is now: " + player.getScore());
 				displayBoardStatus();
 				tilePath.clear();
+
+				if (endTurn) {
+					if (player.isHet) {
+						player = homPlay;
+					} else
+						player = hetPlay;
+					endTurn = false;
+				}
 			}
 
 		}
