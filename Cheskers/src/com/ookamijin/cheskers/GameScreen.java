@@ -24,20 +24,22 @@ public class GameScreen extends Screen {
 	private Board mBoard;
 	private Paint paint;
 	private Player player;
-	private ArrayList<int[]> tilePath;
+	private ArrayList<Coord> tilePath;
 
 	public GameScreen(Game game) {
 		super(game);
-		player = new Player();
 		initChip();
 		mBoard = new Board();
+
+		// TODO hard coded to start with hom
+		player = new PlayerHom(mBoard);
 
 		paint = new Paint();
 		paint.setTextSize(20);
 		paint.setTextAlign(Paint.Align.LEFT);
 		paint.setAntiAlias(true);
 		paint.setColor(Color.BLACK);
-		tilePath = new ArrayList<int[]>();
+		tilePath = new ArrayList<Coord>();
 	}
 
 	private void initChip() {
@@ -46,9 +48,9 @@ public class GameScreen extends Screen {
 		redChip = Assets.chipRed;
 		for (int i = 0; i < 16; ++i) {
 			yellowChips[i] = new ChipYellow(Board.topInitX(i),
-					Board.topInitY(i));
+					Board.topInitY(i), i);
 
-			redChips[i] = new ChipRed(Board.botInitX(i), Board.botInitY(i));
+			redChips[i] = new ChipRed(Board.botInitX(i), Board.botInitY(i), i);
 
 		}
 
@@ -70,78 +72,130 @@ public class GameScreen extends Screen {
 			TouchEvent event = touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_DOWN) {
 
+				// find what chip and what tile was touched
 				if (touchedBoard(event)) {
-					int tNum[] = mBoard.getTileIndex(event);
-					debug("tile is " + tNum[0] + ", " + tNum[1]);
+					Coord coord = mBoard.getTileIndex(event);
 
-					if (tNum[0] != -1) {
+					if (coord.isValid()) {
+						int tNum[] = { -1, -1 };
+						coord.parse(tNum);
 
 						if (mBoard.mTile[tNum[0]][tNum[1]].hasYellow()) {
 							userChip = yellowChips[mBoard.mTile[tNum[0]][tNum[1]]
 									.getChipIndex()];
-
-							debug("user chip is yellow number "
-									+ mBoard.mTile[tNum[0]][tNum[1]]
-											.getChipIndex());
+							userChip.setId(mBoard.mTile[tNum[0]][tNum[1]]
+									.getChipIndex());
+							tilePath.add(coord);
 						}
 
 						if (mBoard.mTile[tNum[0]][tNum[1]].hasRed()) {
 							userChip = redChips[mBoard.mTile[tNum[0]][tNum[1]]
 									.getChipIndex()];
-
-							debug("user chip is red number "
-									+ mBoard.mTile[tNum[0]][tNum[1]]
-											.getChipIndex());
-						}
+							userChip.setId(mBoard.mTile[tNum[0]][tNum[1]]
+									.getChipIndex());
+							tilePath.add(coord);
+						} 
 					}
 				}
 			}
 
+			// track chip location and build array of tiles visited
 			if (event.type == TouchEvent.TOUCH_DRAGGED) {
 
 				if (userChip != null) {
 					userChip.setCenterX(event.x);
 					userChip.setCenterY(event.y);
 
-					int coord[] = mBoard.getTileIndex(event);
-					if (coord[0] != -1) {
-						if (tilePath.size() < 1)
-							tilePath.add(coord);
-						else {
+					Coord coord = mBoard.getTileIndex(event);
+					if (coord.isValid()) {
 
-							int comp[] = tilePath.get(tilePath.size() - 1);
-							if (comp[0] != coord[0] || comp[1] != coord[1])
+						if (tilePath.size() < 1) {
+
+							tilePath.add(coord);
+						} else {
+							Coord comp = tilePath.get(tilePath.size() - 1);
+							if (!coord.equals(comp)) {
 
 								tilePath.add(coord);
+							}
 						}
 					}
-
 				}
 			}
 
+			// decide if tile path is legal, affect necessary chips, center
+			// user chip on target tile, and clear tile array
 			if (event.type == TouchEvent.TOUCH_UP) {
 
-				for (int j = 0; j < tilePath.size(); ++j) {
-					int coord[] = tilePath.get(j);
-					debug("coord " + j + " is " + coord[0] + ", " + coord[1]);
+				Coord chipEndPos = new Coord(0, 0);
+
+				if (legalMove()) {
+					if (player.isValid(tilePath, userChip)) {
+
+						chipEndPos = mBoard.getTileCenter(tilePath.get(tilePath
+								.size() - 1));
+						userChip.setCoords(chipEndPos);
+
+						// update tiles
+						mBoard.setTileHasNothing(tilePath.get(0));
+						mBoard.setTileChipIndex(tilePath.get(0), 0);
+
+						if (userChip.isRed()) {
+							mBoard.setTileHasRed(tilePath.get(tilePath.size() - 1));
+							mBoard.setTileChipIndex(
+									tilePath.get(tilePath.size() - 1),
+									userChip.getId());
+						} else {
+							mBoard.setTileHasYellow(tilePath.get(tilePath
+									.size() - 1));
+							mBoard.setTileChipIndex(
+									tilePath.get(tilePath.size() - 1),
+									userChip.getId());
+						}
+
+						debug("valid move!");
+
+					} else {
+						chipEndPos = mBoard.getTileCenter(tilePath.get(0));
+						userChip.setCoords(chipEndPos);
+
+						debug("invalid move");
+					}
+				} else {
+					chipEndPos = mBoard.getTileCenter(tilePath.get(0));
+					userChip.setCoords(chipEndPos);
+					debug("illegal move!");
+
 				}
+
+				for (int j = 0; j < tilePath.size(); ++j) {
+					debug("tilePath " + j + " is " + tilePath.get(j).x + ", "
+							+ tilePath.get(j).y);
+				}
+				displayBoardStatus();
 				tilePath.clear();
 			}
-		}
 
+		}
+	}
+
+	private boolean legalMove() {
+
+		// empty landing spot
+		if (tilePath.size() == 0)
+			return false;
+		if (!mBoard.tileIsEmpty(tilePath.get(tilePath.size() - 1)))
+			return false;
+
+		// start doesn't equal end
+		if (tilePath.get(0).equals(tilePath.get(tilePath.size() - 1)))
+			return false;
+
+		return true;
 	}
 
 	private boolean touchedBoard(TouchEvent event) {
 		if (event.x >= 160 && event.x <= 640)
-			return true;
-		else
-			return false;
-	}
-
-	private boolean inBounds(TouchEvent event, int x, int y, int width,
-			int height) {
-		if (event.x > x && event.x < x + width - 1 && event.y > y
-				&& event.y < y + height - 1)
 			return true;
 		else
 			return false;
@@ -159,6 +213,20 @@ public class GameScreen extends Screen {
 					redChips[i].getCenterY() - 40);
 		}
 		g.drawString(player.name, 10, 30, paint);
+	}
+
+	private void displayBoardStatus() {
+
+		String line = "";
+		for (int j = 0; j < 6; ++j) {
+			for (int i = 0; i < 6; ++i) {
+				Coord coord = new Coord(i, j);
+				line = line + " " + mBoard.tileStatus(coord);
+			}
+			debug(line);
+			line = "";
+		}
+
 	}
 
 	@Override

@@ -47,17 +47,17 @@ public class Board {
 				}
 			}
 		}
-		//initialize chip ids
+		// initialize chip ids
 		int yellow = 0;
 		int red = 0;
 		for (int j = 0; j < 6; ++j) {
 			for (int i = 0; i < 6; ++i) {
-				
-				if(mTile[i][j].hasYellow()) {
+
+				if (mTile[i][j].hasYellow()) {
 					mTile[i][j].setChipIndex(yellow);
 					++yellow;
 				}
-				if(mTile[i][j].hasRed()) {
+				if (mTile[i][j].hasRed()) {
 					mTile[i][j].setChipIndex(red);
 					++red;
 				}
@@ -162,19 +162,81 @@ public class Board {
 		return 0;
 	}
 
-	public int[] getTileIndex(TouchEvent event) {
+	public Coord getTileIndex(TouchEvent event) {
 
-		int coords[] = { -1, -1 };
+		Coord coords = new Coord(-1, -1);
 		for (int j = 0; j < 6; ++j) {
 			for (int i = 0; i < 6; ++i) {
 				if (mTile[i][j].inBounds(event)) {
-					coords[0] = i;
-					coords[1] = j;
+					coords.setX(i);
+					coords.setY(j);
 					return coords;
 				}
 			}
 		}
 		return coords;
+	}
+
+	public Coord getTileCenter(Coord coord) {
+		Coord chipPos = new Coord(x[coord.x], y[coord.y]);
+		return chipPos;
+	}
+
+	public boolean tileIsEmpty(Coord coord) {
+
+		if (mTile[coord.x][coord.y].hasNothing())
+			return true;
+		return false;
+	}
+
+	public boolean tileHasRed(Coord coord) {
+		if (mTile[coord.x][coord.y].hasNothing())
+			return true;
+		return false;
+	}
+
+	public boolean tileHasYellow(Coord coord) {
+
+		if (mTile[coord.x][coord.y].hasNothing())
+			return true;
+		return false;
+	}
+
+	public void setTileHasNothing(Coord coord) {
+		mTile[coord.x][coord.y].setHasNothing(true);
+
+	}
+
+	public void setTileHasYellow(Coord coord) {
+		mTile[coord.x][coord.y].setHasYellow(true);
+
+	}
+
+	public void setTileHasRed(Coord coord) {
+		mTile[coord.x][coord.y].setHasRed(true);
+
+	}
+
+	public void setTileChipIndex(Coord coord, int id) {
+		mTile[coord.x][coord.y].setChipIndex(id);
+
+	}
+
+	public String tileStatus(Coord coord) {
+		String status = "";
+
+		if (mTile[coord.x][coord.y].hasNothing()) {
+			status += "N";
+		} else if (mTile[coord.x][coord.y].hasRed()) {
+			status += "R";
+		} else {
+			status += "Y";
+		}
+
+		if (mTile[coord.x][coord.y].getChipIndex() < 10)
+			status += "0";
+		status += mTile[coord.x][coord.y].getChipIndex();
+		return status;
 	}
 
 }
