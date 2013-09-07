@@ -7,12 +7,12 @@ import com.ookamijin.framework.Screen;
 
 public class LoadingScreen extends Screen {
 
-	float displayTime;
+	float displayCount;
 	boolean doneLoading = false;
 
 	public LoadingScreen(Game game) {
 		super(game);
-		displayTime = 0;
+		displayCount = 0;
 	}
 
 	@Override
@@ -30,8 +30,8 @@ public class LoadingScreen extends Screen {
 	@Override
 	public void paint(float deltaTime) {
 		
-		if (displayTime < 0 || !doneLoading) {
-			displayTime += deltaTime;
+		if (displayCount < 60 || !doneLoading) {
+			++displayCount;
 			Graphics g = game.getGraphics();
 			g.drawImage(Assets.splash, 0, 0);
 
