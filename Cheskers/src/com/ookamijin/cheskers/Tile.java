@@ -9,6 +9,24 @@ public class Tile {
 	private boolean isRed = false;
 	private boolean isYellow = false;
 	private boolean isBlank = true;
+	private boolean isBonusYellow = false;
+	private boolean isBonusRed = false;
+
+	public boolean isBonusYellow() {
+		return isBonusYellow;
+	}
+
+	public boolean isBonusRed() {
+		return isBonusRed;
+	}
+
+	public void setBonusYellow(boolean isBonusYellow) {
+		this.isBonusYellow = isBonusYellow;
+	}
+
+	public void setBonusRed(boolean isBonusRed) {
+		this.isBonusRed = isBonusRed;
+	}
 
 	private int centerX, centerY;
 	private int chipIndex;

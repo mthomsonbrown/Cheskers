@@ -64,6 +64,21 @@ public class Board {
 			}
 		}
 
+		// set bonus squares
+		mTile[1][1].setBonusYellow(true);
+		mTile[2][1].setBonusYellow(true);
+		mTile[4][2].setBonusYellow(true);
+		mTile[4][3].setBonusYellow(true);
+		mTile[1][4].setBonusYellow(true);
+		mTile[2][4].setBonusYellow(true);
+
+		mTile[3][1].setBonusRed(true);
+		mTile[4][1].setBonusRed(true);
+		mTile[1][2].setBonusRed(true);
+		mTile[1][3].setBonusRed(true);
+		mTile[4][4].setBonusRed(true);
+		mTile[3][4].setBonusRed(true);
+
 	}
 
 	public static int topInitX(int index) {
@@ -221,7 +236,12 @@ public class Board {
 		mTile[coord.x][coord.y].setChipIndex(id);
 
 	}
-	
+
+	/**
+	 * 
+	 * @param coord
+	 * @return index of chip at tile coord
+	 */
 	public int getTileChipIndex(Coord coord) {
 		return mTile[coord.x][coord.y].getChipIndex();
 
@@ -242,6 +262,15 @@ public class Board {
 			status += "0";
 		status += mTile[coord.x][coord.y].getChipIndex();
 		return status;
+	}
+
+	public boolean tileIsBonus(Coord tile) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public Tile getTile(Coord coord) {
+		return mTile[coord.x][coord.y];
 	}
 
 }

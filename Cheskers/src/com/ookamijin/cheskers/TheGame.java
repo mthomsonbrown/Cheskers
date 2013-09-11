@@ -6,7 +6,7 @@ import com.ookamijin.framework.implementation.AndroidGame;
 public class TheGame extends AndroidGame {
 
 	boolean firstTimeCreate = true;
-
+	
 	@Override
 	public Screen getInitScreen() {
 
