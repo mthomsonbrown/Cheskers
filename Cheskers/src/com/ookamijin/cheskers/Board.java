@@ -273,4 +273,8 @@ public class Board {
 		return mTile[coord.x][coord.y];
 	}
 
+	public boolean tileHasNothing(Coord coord) {
+		return mTile[coord.x][coord.y].hasNothing();
+	}
+
 }

@@ -128,7 +128,7 @@ public class GameScreen extends Screen {
 
 		if (player.isRobot) {
 			debug("player is robot!");
-			player.doRobot(mBoard, tilePath, redChips, yellowChips, userChip);
+			player.doRobot(mBoard, tilePath, userChip);
 			processMove();
 		} else
 			handleTouchEvents();
@@ -148,26 +148,18 @@ public class GameScreen extends Screen {
 				if (touchedBoard(event)) {
 					Coord coord = mBoard.getTileIndex(event);
 
-					int tileNum[] = { -1, -1 };
-					tileNum = coord.coordToIntArray();
-
 					if (coord.isValid()
-							&& !mBoard.mTile[tileNum[0]][tileNum[1]]
-									.hasNothing()) {
+							&& !mBoard.tileHasNothing(coord)) {
 
-						if (mBoard.mTile[tileNum[0]][tileNum[1]].hasYellow()) {
-							userChip = yellowChips[mBoard.mTile[tileNum[0]][tileNum[1]]
-									.getChipIndex()];
-							userChip.setId(mBoard.mTile[tileNum[0]][tileNum[1]]
-									.getChipIndex());
+						if (mBoard.tileHasYellow(coord)) {
+							userChip = yellowChips[mBoard.getTileChipIndex(coord)];
+							userChip.setId(mBoard.getTileChipIndex(coord));
 							tilePath.add(coord);
 						}
 
-						if (mBoard.mTile[tileNum[0]][tileNum[1]].hasRed()) {
-							userChip = redChips[mBoard.mTile[tileNum[0]][tileNum[1]]
-									.getChipIndex()];
-							userChip.setId(mBoard.mTile[tileNum[0]][tileNum[1]]
-									.getChipIndex());
+						if (mBoard.tileHasRed(coord)) {
+							userChip = redChips[mBoard.getTileChipIndex(coord)];
+							userChip.setId(mBoard.getTileChipIndex(coord));
 							tilePath.add(coord);
 						}
 					}
