@@ -63,12 +63,10 @@ public class PlayerHom extends Player {
 		boolean verdict = false;
 
 		if (userChip.isRed()) {
-			verdict = mBoard.mTile[tilePath.get(1).x][tilePath.get(1).y]
-					.hasRed();
+			verdict = mBoard.tileHasRed(tilePath.get(1));
 
 		} else
-			verdict = mBoard.mTile[tilePath.get(1).x][tilePath.get(1).y]
-					.hasYellow();
+			verdict = mBoard.tileHasYellow(tilePath.get(1));
 		if (verdict) {
 			++score;
 			targets.add(tilePath.get(1));

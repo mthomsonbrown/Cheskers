@@ -8,9 +8,14 @@ public class Board {
 	public static int x[] = { 200, 280, 360, 440, 520, 600 };
 	public static int y[] = { 40, 120, 200, 280, 360, 440 };
 
-	public Tile mTile[][];
+	
+	private Tile mTile[][];
 
+	private ChipYellow yellowChips[] = new ChipYellow[16];
+	private ChipRed redChips[] = new ChipRed[16];
+	
 	public Board() {
+		
 
 		mTile = new Tile[6][6];
 		int tNum = 0;
@@ -78,6 +83,15 @@ public class Board {
 		mTile[1][3].setBonusRed(true);
 		mTile[4][4].setBonusRed(true);
 		mTile[3][4].setBonusRed(true);
+		
+		//initialize chips (taken from game screen)
+		for (int i = 0; i < 16; ++i) {
+			yellowChips[i] = new ChipYellow(Board.topInitX(i),
+					Board.topInitY(i), i);
+
+			redChips[i] = new ChipRed(Board.botInitX(i), Board.botInitY(i), i);
+
+		}
 
 	}
 
@@ -275,6 +289,29 @@ public class Board {
 
 	public boolean tileHasNothing(Coord coord) {
 		return mTile[coord.x][coord.y].hasNothing();
+	}
+
+	public Chip getChip(Coord coord) {
+		if(tileHasRed(coord)) {
+			return redChips[mTile[coord.x][coord.y].getChipIndex()];
+		}
+		return yellowChips[mTile[coord.x][coord.y].getChipIndex()];
+	}
+
+	public int getYellowChipX(int i) {
+		return yellowChips[i].getCenterX();
+	}
+
+	public int getYellowChipY(int i) {
+		return yellowChips[i].getCenterY();
+	}
+
+	public int getRedChipX(int i) {
+		return redChips[i].getCenterX();
+	}
+
+	public int getRedChipY(int i) {
+		return redChips[i].getCenterY();
 	}
 
 }

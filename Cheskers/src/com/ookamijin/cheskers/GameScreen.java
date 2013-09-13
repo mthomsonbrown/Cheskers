@@ -16,7 +16,7 @@ import com.ookamijin.framework.Screen;
 
 public class GameScreen extends Screen {
 
-	private static ChipYellow yellowChips[] = new ChipYellow[16];
+	// private static ChipYellow yellowChips[] = new ChipYellow[16];
 	private static ChipRed redChips[] = new ChipRed[16];
 
 	/**
@@ -68,7 +68,7 @@ public class GameScreen extends Screen {
 		mBoard = new Board();
 		tilePath = new ArrayList<Coord>();
 		loadAssets();
-		initChip();
+		// initChip();
 
 		setStartingPlayer(player1, player2);
 
@@ -112,14 +112,14 @@ public class GameScreen extends Screen {
 	}
 
 	private void initChip() {
-
-		for (int i = 0; i < 16; ++i) {
-			yellowChips[i] = new ChipYellow(Board.topInitX(i),
-					Board.topInitY(i), i);
-
-			redChips[i] = new ChipRed(Board.botInitX(i), Board.botInitY(i), i);
-
-		}
+		/*
+		 * for (int i = 0; i < 16; ++i) { yellowChips[i] = new
+		 * ChipYellow(Board.topInitX(i), Board.topInitY(i), i);
+		 * 
+		 * redChips[i] = new ChipRed(Board.botInitX(i), Board.botInitY(i), i);
+		 * 
+		 * }
+		 */
 
 	}
 
@@ -148,17 +148,16 @@ public class GameScreen extends Screen {
 				if (touchedBoard(event)) {
 					Coord coord = mBoard.getTileIndex(event);
 
-					if (coord.isValid()
-							&& !mBoard.tileHasNothing(coord)) {
+					if (coord.isValid() && !mBoard.tileHasNothing(coord)) {
 
 						if (mBoard.tileHasYellow(coord)) {
-							userChip = yellowChips[mBoard.getTileChipIndex(coord)];
+							userChip = mBoard.getChip(coord);
 							userChip.setId(mBoard.getTileChipIndex(coord));
 							tilePath.add(coord);
 						}
 
 						if (mBoard.tileHasRed(coord)) {
-							userChip = redChips[mBoard.getTileChipIndex(coord)];
+							userChip = mBoard.getChip(coord);
 							userChip.setId(mBoard.getTileChipIndex(coord));
 							tilePath.add(coord);
 						}
@@ -287,11 +286,11 @@ public class GameScreen extends Screen {
 		for (int i = 0; i < targets.size(); ++i) {
 
 			if (mBoard.tileHasRed(targets.get(i))) {
-				tChip = redChips[mBoard.getTileChipIndex(targets.get(i))];
+				tChip = mBoard.getChip(targets.get(i));
 				tChip.setCenterX(player.getPoolX());
 				tChip.setCenterY(player.getPoolY());
 			} else {
-				tChip = yellowChips[mBoard.getTileChipIndex(targets.get(i))];
+				tChip = mBoard.getChip(targets.get(i));
 				tChip.setCenterX(player.getPoolX());
 				tChip.setCenterY(player.getPoolY());
 			}
@@ -342,10 +341,10 @@ public class GameScreen extends Screen {
 		Graphics g = game.getGraphics();
 		g.drawImage(Assets.background, 0, 0);
 		for (int i = 0; i < 16; ++i) {
-			g.drawImage(yellowChip, yellowChips[i].getCenterX() - 40,
-					yellowChips[i].getCenterY() - 40);
-			g.drawImage(redChip, redChips[i].getCenterX() - 40,
-					redChips[i].getCenterY() - 40);
+			g.drawImage(yellowChip, mBoard.getYellowChipX(i) - 40,
+					mBoard.getYellowChipY(i) - 40);
+			g.drawImage(redChip, mBoard.getRedChipX(i) - 40,
+					mBoard.getRedChipY(i) - 40);
 		}
 
 		// draw player names
