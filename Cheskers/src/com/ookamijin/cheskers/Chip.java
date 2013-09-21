@@ -1,50 +1,98 @@
 package com.ookamijin.cheskers;
 
+import android.util.Log;
+
 public abstract class Chip {
 
-	private int centerX, centerY;
+	private Coord coord, old, next;
 	private int id;
-	
+	private static int V = 10;
+
 	public Chip(int centerX, int centerY, int id) {
 
-        setCenterX(centerX);
-        setCenterY(centerY);
+		coord = new Coord(centerX, centerY);
 
-    }
-	
+	}
+
+	public void update() {
+		if (next != null) {
+			if (old.getX() > next.getX()) {
+				coord.decX(V);
+				if (coord.getX() < next.getX()) {
+					coord.setX(next.getX());
+				}
+			} else if (old.getX() < next.getX()) {
+				coord.incX(V);
+				if (coord.getX() > next.getX()) {
+					coord.setX(next.getX());
+				}
+			}
+
+			if (old.getY() > next.getY()) {
+				coord.decY(V);
+				if (coord.getY() < next.getY()) {
+					coord.setY(next.getY());
+				}
+			}
+
+			else if (old.getY() < next.getY()) {
+				coord.incY(V);
+				if (coord.getY() > next.getY()) {
+					coord.setY(next.getY());
+				}
+			}
+			
+			if (coord.getX() == next.getX() && coord.getY() == next.getY()) {
+				next = old = null;
+			}
+			
+		}
+
+	}
+
+	public void setNextCoord(Coord next) {
+		if (next != null) {
+			this.next = next;
+			this.old = new Coord(coord);
+		}
+	}
+
 	public int getCenterX() {
-		return centerX;
+		return coord.getX();
 	}
 
 	public int getCenterY() {
-		return centerY;
+		return coord.getY();
 	}
-	
+
 	public int getId() {
 		return id;
 	}
 
 	public void setCenterX(int centerX) {
-		this.centerX = centerX;
+		this.coord.setX(centerX);
 	}
 
 	public void setCenterY(int centerY) {
-		this.centerY = centerY;
+		this.coord.setY(centerY);
 	}
 
 	public void setCoords(Coord coord) {
-		centerX = coord.x;
-		centerY = coord.y;
-		
+		this.coord = coord;
+
 	}
-	
+
 	public abstract boolean isYellow();
-	
+
 	public abstract boolean isRed();
 
 	public void setId(int id) {
 		this.id = id;
-		
+
 	}
-	
+
+	private void debug(String message) {
+		Log.d("DEBUG", message);
+	}
+
 }

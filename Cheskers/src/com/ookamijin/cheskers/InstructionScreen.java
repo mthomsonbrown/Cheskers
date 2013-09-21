@@ -35,20 +35,33 @@ public class InstructionScreen extends Screen {
 
 			TouchEvent event = touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_UP) {
-				if (nextButton(event) && index < Assets.instructions.size()) {
+				if (nextButton(event) && index < Assets.instructions.size() - 1) {
 
+					debug("index is " + index + " and assets size is "
+							+ Assets.instructions.size());
 					currentBackground = Assets.instructions.get(index);
 					++index;
 
 				} else if (nextButton(event)) {
-					debug("clicked next for last time");
-					
-				} else if (startButton(event))
+					currentBackground = Assets.instructions
+							.get(Assets.instructions.size() - 1);
+				} else if (startButton(event)
+						&& index < Assets.instructions.size() - 1)
 					game.setScreen(new MainMenuScreen(game));
+			} else if (newStart(event)
+					&& index >= Assets.instructions.size() - 1) {
+				game.setScreen(new MainMenuScreen(game));
 			}
 
 		}
 
+	}
+
+	private boolean newStart(TouchEvent event) {
+		if (event.x >= 335 && event.x <= 440 && event.y >= 195
+				&& event.y <= 300)
+			return true;
+		return false;
 	}
 
 	private boolean nextButton(TouchEvent event) {
@@ -73,12 +86,12 @@ public class InstructionScreen extends Screen {
 
 	@Override
 	public void pause() {
-		
+
 	}
 
 	@Override
 	public void resume() {
-		
+
 	}
 
 	@Override
@@ -90,7 +103,7 @@ public class InstructionScreen extends Screen {
 	public void backButton() {
 
 	}
-	
+
 	private void debug(String message) {
 		Log.d("DEBUG", message);
 	}

@@ -9,6 +9,9 @@ import android.util.Log;
 public abstract class Player {
 	protected String name = "Add Name!";
 	protected Board mBoard;
+	protected Chip userChip;
+	protected ArrayList<Coord> tilePath;
+
 	protected int score;
 	public boolean isHet = false;
 	public boolean isHom = false;
@@ -21,7 +24,7 @@ public abstract class Player {
 	protected int poolX, poolY;
 	protected Rect poolBounds;
 
-	private Random gen;
+	protected Random gen;
 
 	public Player() {
 		poolBounds = new Rect();
@@ -77,10 +80,6 @@ public abstract class Player {
 	public abstract boolean isBonus(ArrayList<Coord> tilePath, Chip userChip);
 
 	public int getPoolX() {
-
-		debug("player pool x is " + poolBounds.left
-				+ gen.nextInt(poolBounds.right - poolBounds.left) + 1);
-
 		return poolBounds.left
 				+ gen.nextInt(poolBounds.right - poolBounds.left) + 1;
 
@@ -92,7 +91,21 @@ public abstract class Player {
 				+ 1;
 	}
 
-	private void debug(String message) {
+	public Coord getPoolCoord() {
+		int x, y;
+		Coord coord;
+		x = poolBounds.left + gen.nextInt(poolBounds.right - poolBounds.left)
+				+ 1;
+
+		y = poolBounds.top + gen.nextInt(poolBounds.bottom - poolBounds.top)
+				+ 1;
+
+		coord = new Coord(x, y);
+
+		return coord;
+	}
+
+	protected void debug(String message) {
 		Log.d("DEBUG", message);
 	}
 
@@ -109,6 +122,8 @@ public abstract class Player {
 		return nameY;
 	}
 
-	public abstract void doRobot(Board mBoard, ArrayList<Coord> tilePath, Chip userChip);
+	public abstract ArrayList<Coord> doRobot(Board mBoard);
+
+	protected abstract ArrayList<ArrayList<Coord>> findAllMoves();
 
 }

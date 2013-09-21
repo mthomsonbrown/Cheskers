@@ -16,14 +16,11 @@ import com.ookamijin.framework.Screen;
 
 public class GameScreen extends Screen {
 
-	// private static ChipYellow yellowChips[] = new ChipYellow[16];
-	private static ChipRed redChips[] = new ChipRed[16];
-
 	/**
 	 * userchip only passes color information to player
 	 */
 	private Chip userChip;
-	private ArrayList<Coord> tilePath;
+	public ArrayList<Coord> tilePath;
 
 	private Image yellowChip, redChip;
 	private Image hetOn, hetOff, homOn, homOff;
@@ -126,9 +123,14 @@ public class GameScreen extends Screen {
 	@Override
 	public void update(float deltaTime) {
 
+		mBoard.update();
+		
 		if (player.isRobot) {
 			debug("player is robot!");
-			player.doRobot(mBoard, tilePath, userChip);
+
+			tilePath = player.doRobot(mBoard);
+			userChip = mBoard.getChip(tilePath.get(0));
+			userChip.setId(mBoard.getTileChipIndex(tilePath.get(0)));
 			processMove();
 		} else
 			handleTouchEvents();
@@ -240,6 +242,13 @@ public class GameScreen extends Screen {
 			}
 		} else {
 			if (tilePath.size() > 0) {
+				debug("something's null... chipEndPos = " + chipEndPos.getX()
+						+ ", " + chipEndPos.getY());
+				debug("tilePath.get(0) is " + tilePath.get(0).getX() + ", "
+						+ tilePath.get(0).getY());
+				debug("userchip is " + userChip.getCenterX() + ", "
+						+ userChip.getCenterY());
+
 				chipEndPos = mBoard.getTileCenter(tilePath.get(0));
 				userChip.setCoords(chipEndPos);
 			}
@@ -257,12 +266,14 @@ public class GameScreen extends Screen {
 		userChip = null;
 
 		if (endTurn) {
+			debug("Reached end of Turn!");
 			take(targets);
 			if (player.score >= 13)
 				gameWon();
 			else {
 				if (player.isHet) {
 					player = homPlay;
+
 				} else {
 					player = hetPlay;
 				}
@@ -285,16 +296,12 @@ public class GameScreen extends Screen {
 		Chip tChip;
 		for (int i = 0; i < targets.size(); ++i) {
 
-			if (mBoard.tileHasRed(targets.get(i))) {
-				tChip = mBoard.getChip(targets.get(i));
-				tChip.setCenterX(player.getPoolX());
-				tChip.setCenterY(player.getPoolY());
-			} else {
-				tChip = mBoard.getChip(targets.get(i));
-				tChip.setCenterX(player.getPoolX());
-				tChip.setCenterY(player.getPoolY());
-			}
+			tChip = mBoard.getChip(targets.get(i));
 			mBoard.setTileHasNothing(targets.get(i));
+			
+			tChip.setNextCoord(player.getPoolCoord());
+
+			
 		}
 
 	}
@@ -307,14 +314,21 @@ public class GameScreen extends Screen {
 	private boolean legalMove() {
 
 		// empty landing spot
-		if (tilePath.size() == 0)
+		if (tilePath.size() == 0) {
+			debug("illegal, empty landing spot");
 			return false;
-		if (!mBoard.tileIsEmpty(tilePath.get(tilePath.size() - 1)))
+		}
+
+		if (!mBoard.tileIsEmpty(tilePath.get(tilePath.size() - 1))) {
+			debug("illegal, tile not empty");
 			return false;
+		}
 
 		// start doesn't equal end
-		if (tilePath.get(0).equals(tilePath.get(tilePath.size() - 1)))
+		if (tilePath.get(0).equals(tilePath.get(tilePath.size() - 1))) {
+			debug("illegal, start doesn't equal end");
 			return false;
+		}
 
 		return true;
 	}

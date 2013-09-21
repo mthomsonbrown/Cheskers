@@ -8,6 +8,11 @@ public class Coord {
 		this.y = y;
 	}
 
+	public Coord(Coord coord) {
+		this.x = coord.getX();
+		this.y = coord.getY();
+	}
+
 	/**
 	 * 
 	 * @return true if coord is not (-1, -1)
@@ -51,6 +56,19 @@ public class Coord {
 
 	public String text() {
 		return x + ", " + y;
+	}
+
+	public void decX(int v) {
+		x = x - v;
+	}
+	public void decY(int v) {
+		y = y - v;
+	}
+	public void incX(int v) {
+		x = x + v;
+	}
+	public void incY(int v) {
+		y = y + v;
 	}
 
 

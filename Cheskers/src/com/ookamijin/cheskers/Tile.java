@@ -119,4 +119,20 @@ public class Tile {
 		return false;
 	}
 
+	public boolean matches(Chip objectChip) {
+		if(hasYellow && objectChip.isYellow())
+			return true;
+		if(hasRed && objectChip.isRed())
+			return true;
+		return false;
+	}
+
+	public boolean opposite(Chip objectChip) {
+		if(hasYellow && objectChip.isRed())
+			return true;
+		if(hasRed && objectChip.isYellow())
+			return true;
+		return false;
+	}
+
 }

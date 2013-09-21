@@ -33,14 +33,14 @@ public class LoadingScreen extends Screen {
 		Assets.hetOn = g.newImage("hetOn.png", ImageFormat.ARGB4444);
 		Assets.hetOff = g.newImage("hetOff.png", ImageFormat.ARGB4444);
 		Assets.selectScreen = g.newImage("robotScreen.jpg", ImageFormat.RGB565);
-		
+
 		// instructions
 		Assets.instructions = new ArrayList<Image>();
-		Assets.instructions.add(g.newImage("instructions1.jpg",
-				ImageFormat.RGB565));
-		Assets.instructions.add(g.newImage("instructions2.jpg",
-				ImageFormat.RGB565));
-		
+
+		for (int i = 1; i <= 5; ++i) {
+			Assets.instructions.add(g.newImage("instructions" + i + ".jpg",
+					ImageFormat.RGB565));
+		}
 
 		doneLoading = true;
 
