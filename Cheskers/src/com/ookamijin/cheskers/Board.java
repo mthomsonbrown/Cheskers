@@ -97,7 +97,7 @@ public class Board {
 		for (int i = 0; i < 16; ++i) {
 			yellowChips[i].update();
 
-			redChips[i].update(); 
+			redChips[i].update();  
 
 		}
 	}
