@@ -228,7 +228,7 @@ public class GameScreen extends Screen {
 							userChip.getId());
 				}
 
-				if (player.isBonus(tilePath, userChip)) {
+				if (player.isBonus(tilePath, userChip) && targets.size() > 0) {
 					endTurn = false;
 					take(targets);
 					if (player.score >= 13)
