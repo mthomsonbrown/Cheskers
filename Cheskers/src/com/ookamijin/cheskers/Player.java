@@ -165,5 +165,29 @@ public abstract class Player {
 	public abstract ArrayList<Coord> doRobot(Board mBoard);
 
 	protected abstract ArrayList<ArrayList<Coord>> findAllMoves();
+	
+	protected ArrayList<Coord> pickPriority(ArrayList<ArrayList<Coord>> moveList) {
+		
+		// taking random move...
+				// TODO implement difficulty here
+
+				// here make sub array of double move options.
+				ArrayList<ArrayList<Coord>> dubList = new ArrayList<ArrayList<Coord>>();
+				for (int i = 0; i < moveList.size(); ++i) {
+					if (moveList.get(i).size() > 3) {
+						dubList.add(moveList.get(i));
+					}
+				}
+
+				if (dubList.size() > 0) {
+					moveList = dubList;
+				}
+				if (moveList.size() > 1)
+					tilePath = moveList.get(gen.nextInt(moveList.size() - 1));
+				else
+					tilePath = moveList.get(0);
+		
+		return tilePath;
+	}
 
 }

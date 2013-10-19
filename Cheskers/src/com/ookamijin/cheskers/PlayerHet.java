@@ -91,7 +91,7 @@ public class PlayerHet extends Player {
 		ArrayList<ArrayList<Coord>> moveList;
 
 		moveList = findAllMoves();
-
+//start debug
 		debug("in robot movelist size is " + moveList.size());
 
 		for (int i = 0; i < moveList.size(); ++i) {
@@ -102,28 +102,12 @@ public class PlayerHet extends Player {
 				move.get(j).display();
 			}
 		}
-
-		// taking random move...
-		// TODO implement difficulty here
-
-		// here make sub array of double move options.
-		ArrayList<ArrayList<Coord>> dubList = new ArrayList<ArrayList<Coord>>();
-		for (int i = 0; i < moveList.size(); ++i) {
-			if (moveList.get(i).size() > 3) {
-				dubList.add(moveList.get(i));
-			}
-		}
-
-		if (dubList.size() > 0) {
-			moveList = dubList;
-		}
-		if (moveList.size() > 1)
-			tilePath = moveList.get(gen.nextInt(moveList.size() - 1));
-		else
-			tilePath = moveList.get(0);
+//end debug
+		
+		
 
 		debug("tilepath returned from player het is " + tilePath.size());
-		return tilePath;
+		return pickPriority(moveList);
 	}
 
 	@Override

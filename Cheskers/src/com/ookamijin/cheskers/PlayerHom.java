@@ -97,141 +97,198 @@ public class PlayerHom extends Player {
 		debug("in robot movelist size is " + moveList.size());
 
 		
-		// taking random move...
-		//TODO implement difficulty here
-		if (moveList.size() > 1)
-			tilePath = moveList.get(gen.nextInt(moveList.size() - 1));
-		else
-			tilePath = moveList.get(0);
-
-		return tilePath;
+		return pickPriority(moveList);
 	}
 
 	@Override
 	protected ArrayList<ArrayList<Coord>> findAllMoves() {
 		ArrayList<ArrayList<Coord>> moveList = new ArrayList<ArrayList<Coord>>();
-		ArrayList<ArrayList<Coord>> backupList = new ArrayList<ArrayList<Coord>>();
+		ArrayList<Coord> mTilePath;
 
 		// search each tile TTBLTR
 		for (int j = 0; j < 6; ++j) {
 			for (int i = 0; i < 6; ++i) {
-				Chip objectChip = mBoard.getChip(new Coord(i, j));
+				Coord startCoord = new Coord(i, j);
+
 				debug("searching coord " + i + ", " + j);
 
 				// tile has chip
-				if (!mBoard.tileHasNothing(new Coord(i, j))) {
+				if (!mBoard.tileHasNothing(startCoord)) {
+					Chip objectChip = mBoard.getChip(startCoord);
 
-					// Decide to check left
-					if (i - 2 >= 0) {
-						debug("it was a valid target coord to search left of");
-
-						// add move to moveList
-						if (mBoard
-								.tileHasMatch(new Coord(i - 1, j), objectChip)
-								&& mBoard.tileHasNothing(new Coord(i - 2, j))) {
-							debug("left search satisfies rules");
-
-							moveList.add(new ArrayList<Coord>());
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i, j));
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i - 1, j));
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i - 2, j));
-						}
-
-						// add move to backupList (moves chip one space left)
-						if (mBoard.tileHasNothing(new Coord(i - 1, j))) {
-							backupList.add(new ArrayList<Coord>());
-							backupList.get(backupList.size() - 1).add(
-									new Coord(i, j));
-							backupList.get(backupList.size() - 1).add(
-									new Coord(i - 1, j));
-						}
+					mTilePath = new ArrayList<Coord>();
+					if (validLeftMove(startCoord, objectChip, mTilePath)) {
+						moveList.add(mTilePath);
 					}
 
-					// Decide to check up
-					if (j - 2 >= 0) {
-						if (mBoard
-								.tileHasMatch(new Coord(i, j - 1), objectChip)
-								&& mBoard.tileHasNothing(new Coord(i, j - 2))) {
-							moveList.add(new ArrayList<Coord>());
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i, j));
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i, j - 1));
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i, j - 2));
-						}
-
-						// add move to backupList (moves chip one space left)
-						if (mBoard.tileHasNothing(new Coord(i, j - 1))) {
-							backupList.add(new ArrayList<Coord>());
-							backupList.get(backupList.size() - 1).add(
-									new Coord(i, j));
-							backupList.get(backupList.size() - 1).add(
-									new Coord(i, j - 1));
-						}
+					mTilePath = new ArrayList<Coord>();
+					if (validUpMove(startCoord, objectChip, mTilePath)) {
+						moveList.add(mTilePath);
 					}
 
-					// Decide to check down
-					if (j + 2 <= 5) {
-						if (mBoard
-								.tileHasMatch(new Coord(i, j + 1), objectChip)
-								&& mBoard.tileHasNothing(new Coord(i, j + 2))) {
-							moveList.add(new ArrayList<Coord>());
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i, j));
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i, j + 1));
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i, j + 2));
-						}
-
-						// add move to backupList (moves chip one space left)
-						if (mBoard.tileHasNothing(new Coord(i, j + 1))) {
-							backupList.add(new ArrayList<Coord>());
-							backupList.get(backupList.size() - 1).add(
-									new Coord(i, j));
-							backupList.get(backupList.size() - 1).add(
-									new Coord(i, j + 1));
-						}
+					mTilePath = new ArrayList<Coord>();
+					if (validRightMove(startCoord, objectChip, mTilePath)) {
+						moveList.add(mTilePath);
 					}
 
-					// Decide to check right
-					if (i + 2 <= 5) {
-
-						// add move to moveList
-						if (mBoard
-								.tileHasMatch(new Coord(i + 1, j), objectChip)
-								&& mBoard.tileHasNothing(new Coord(i + 2, j))) {
-
-							moveList.add(new ArrayList<Coord>());
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i, j));
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i + 1, j));
-							moveList.get(moveList.size() - 1).add(
-									new Coord(i + 2, j));
-						}
-
-						// add move to backupList (moves chip one space left)
-						if (mBoard.tileHasNothing(new Coord(i + 1, j))) {
-							backupList.add(new ArrayList<Coord>());
-							backupList.get(backupList.size() - 1).add(
-									new Coord(i, j));
-							backupList.get(backupList.size() - 1).add(
-									new Coord(i + 1, j));
-						}
+					mTilePath = new ArrayList<Coord>();
+					if (validDownMove(startCoord, objectChip, mTilePath)) {
+						moveList.add(mTilePath);
 					}
 
+					addBufferMoves(startCoord, moveList);
+				}
+			}
+		}
+		return moveList;
+}
+
+	private boolean validUpMove(Coord startCoord, Chip objectChip,
+			ArrayList<Coord> mTilePath) {
+		boolean verdict = false;
+		int x = startCoord.getX();
+		int y = startCoord.getY();
+
+		if (y - 2 >= 0) {
+			debug("it was a valid target coord to search up of");
+
+			// add move to moveList
+			if (mBoard.tileHasMatch(new Coord(x, y - 1), objectChip)
+					&& mBoard.tileHasNothing(new Coord(x, y - 2))) {
+				debug("up search satisfies rules");
+
+				if (mTilePath.size() < 1) {
+					mTilePath.add(new Coord(x, y));
+				}
+				mTilePath.add(new Coord(x, y - 1));
+				mTilePath.add(new Coord(x, y - 2));
+				verdict = true;
+
+				// double move
+				if (!validUpMove(mTilePath.get(mTilePath.size() - 1),
+						objectChip, mTilePath)) {
+					if (!validRightMove(mTilePath.get(mTilePath.size() - 1),
+							objectChip, mTilePath)) {
+						validLeftMove(mTilePath.get(mTilePath.size() - 1),
+								objectChip, mTilePath);
+					}
+				}
+			}
+		}
+		mTilePath = null;
+		return verdict;
+	}
+
+	private boolean validDownMove(Coord startCoord, Chip objectChip,
+			ArrayList<Coord> mTilePath) {
+		boolean verdict = false;
+		int x = startCoord.getX();
+		int y = startCoord.getY();
+
+		debug("valid down is checking:");
+		startCoord.display();
+		if (y + 2 <= 5) {
+			debug("it was a valid target coord to search down of");
+
+			// add move to moveList
+			if (mBoard.tileHasMatch(new Coord(x, y + 1), objectChip)
+					&& mBoard.tileHasNothing(new Coord(x, y + 2))) {
+				debug("down search satisfies rules");
+
+				if (mTilePath.size() < 1) {
+					mTilePath.add(new Coord(x, y));
+				}
+				mTilePath.add(new Coord(x, y + 1));
+				mTilePath.add(new Coord(x, y + 2));
+				verdict = true;
+
+				// double move
+				if (!validDownMove(mTilePath.get(mTilePath.size() - 1),
+						objectChip, mTilePath)) {
+					if (!validRightMove(mTilePath.get(mTilePath.size() - 1),
+							objectChip, mTilePath)) {
+						validLeftMove(mTilePath.get(mTilePath.size() - 1),
+								objectChip, mTilePath);
+					}
+				}
+			}
+		}
+		mTilePath = null;
+		return verdict;
+	}
+
+	private boolean validLeftMove(Coord startCoord, Chip objectChip,
+			ArrayList<Coord> mTilePath) {
+		
+		boolean verdict = false;
+		int x = startCoord.getX();
+		int y = startCoord.getY();
+
+		if (x - 2 >= 0) {
+			debug("it was a valid target coord to search left of");
+
+			// add move to moveList
+			if (mBoard.tileHasMatch(new Coord(x - 1, y), objectChip)
+					&& mBoard.tileHasNothing(new Coord(x - 2, y))) {
+				debug("left search satisfies rules");
+
+				if (mTilePath.size() < 1) {
+					mTilePath.add(new Coord(x, y));
+				}
+				mTilePath.add(new Coord(x - 1, y));
+				mTilePath.add(new Coord(x - 2, y));
+				verdict = true;
+
+				// double move
+				if (!validUpMove(mTilePath.get(mTilePath.size() - 1),
+						objectChip, mTilePath)) {
+					if (!validDownMove(mTilePath.get(mTilePath.size() - 1),
+							objectChip, mTilePath)) {
+						validLeftMove(mTilePath.get(mTilePath.size() - 1),
+								objectChip, mTilePath);
+					}
+				}
+			}
+		}
+		mTilePath = null;
+		return verdict;
+	}
+
+	private boolean validRightMove(Coord startCoord, Chip objectChip,
+			ArrayList<Coord> mTilePath) {
+
+		boolean verdict = false;
+		int x = startCoord.getX();
+		int y = startCoord.getY();
+
+		if (x + 2 <= 5) {
+			debug("it was a valid target coord to search right of");
+
+			// add move to moveList
+			if (mBoard.tileHasMatch(new Coord(x + 1, y), objectChip)
+					&& mBoard.tileHasNothing(new Coord(x + 2, y))) {
+				debug("right search satisfies rules");
+
+				if (mTilePath.size() < 1) {
+					mTilePath.add(new Coord(x, y));
+				}
+				mTilePath.add(new Coord(x + 1, y));
+				mTilePath.add(new Coord(x + 2, y));
+				verdict = true;
+
+				// double move
+				if (!validUpMove(mTilePath.get(mTilePath.size() - 1),
+						objectChip, mTilePath)) {
+					if (!validDownMove(mTilePath.get(mTilePath.size() - 1),
+							objectChip, mTilePath)) {
+						validRightMove(mTilePath.get(mTilePath.size() - 1),
+								objectChip, mTilePath);
+					}
 				}
 			}
 		}
 
-		if (moveList.size() > 0)
-			return moveList;
-		else
-			return backupList;
+		mTilePath = null;
+		return verdict;
 	}
 }
