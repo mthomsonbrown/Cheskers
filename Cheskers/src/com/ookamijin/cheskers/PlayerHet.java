@@ -166,7 +166,7 @@ public class PlayerHet extends Player {
 				}
 			}
 		}
-			return moveList;
+		return moveList;
 	}
 
 	private void addBufferMoves(Coord startCoord,
@@ -235,14 +235,10 @@ public class PlayerHet extends Player {
 				// double move
 				if (!validUpMove(mTilePath.get(mTilePath.size() - 1),
 						objectChip, mTilePath)) {
-					if (!validDownMove(mTilePath.get(mTilePath.size() - 1),
+					if (!validRightMove(mTilePath.get(mTilePath.size() - 1),
 							objectChip, mTilePath)) {
-						if (!validRightMove(
-								mTilePath.get(mTilePath.size() - 1),
-								objectChip, mTilePath)) {
-							validLeftMove(mTilePath.get(mTilePath.size() - 1),
-									objectChip, mTilePath);
-						}
+						validLeftMove(mTilePath.get(mTilePath.size() - 1),
+								objectChip, mTilePath);
 					}
 				}
 			}
@@ -276,16 +272,12 @@ public class PlayerHet extends Player {
 				verdict = true;
 
 				// double move
-				if (!validUpMove(mTilePath.get(mTilePath.size() - 1),
+				if (!validDownMove(mTilePath.get(mTilePath.size() - 1),
 						objectChip, mTilePath)) {
-					if (!validDownMove(mTilePath.get(mTilePath.size() - 1),
+					if (!validRightMove(mTilePath.get(mTilePath.size() - 1),
 							objectChip, mTilePath)) {
-						if (!validRightMove(
-								mTilePath.get(mTilePath.size() - 1),
-								objectChip, mTilePath)) {
-							validLeftMove(mTilePath.get(mTilePath.size() - 1),
-									objectChip, mTilePath);
-						}
+						validLeftMove(mTilePath.get(mTilePath.size() - 1),
+								objectChip, mTilePath);
 					}
 				}
 			}
@@ -321,12 +313,8 @@ public class PlayerHet extends Player {
 						objectChip, mTilePath)) {
 					if (!validDownMove(mTilePath.get(mTilePath.size() - 1),
 							objectChip, mTilePath)) {
-						if (!validRightMove(
-								mTilePath.get(mTilePath.size() - 1),
-								objectChip, mTilePath)) {
-							validLeftMove(mTilePath.get(mTilePath.size() - 1),
-									objectChip, mTilePath);
-						}
+						validLeftMove(mTilePath.get(mTilePath.size() - 1),
+								objectChip, mTilePath);
 					}
 				}
 			}
@@ -362,18 +350,14 @@ public class PlayerHet extends Player {
 						objectChip, mTilePath)) {
 					if (!validDownMove(mTilePath.get(mTilePath.size() - 1),
 							objectChip, mTilePath)) {
-						if (!validRightMove(
-								mTilePath.get(mTilePath.size() - 1),
-								objectChip, mTilePath)) {
-							validLeftMove(mTilePath.get(mTilePath.size() - 1),
-									objectChip, mTilePath);
-						}
+						validRightMove(mTilePath.get(mTilePath.size() - 1),
+								objectChip, mTilePath);
 					}
 				}
 			}
 		}
+
 		mTilePath = null;
 		return verdict;
 	}
-
 }
