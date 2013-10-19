@@ -124,7 +124,7 @@ public class GameScreen extends Screen {
 	public void update(float deltaTime) {
 
 		mBoard.update();
-		
+
 		if (player.isRobot) {
 			debug("player is robot!");
 
@@ -212,7 +212,11 @@ public class GameScreen extends Screen {
 
 				chipEndPos = mBoard
 						.getTileCenter(tilePath.get(tilePath.size() - 1));
-				userChip.setCoords(chipEndPos);
+
+				if (player.isRobot()) {
+					userChip.setNextCoord(chipEndPos);
+				} else
+					userChip.setCoords(chipEndPos);
 
 				// update tiles
 				mBoard.setTileHasNothing(tilePath.get(0));
@@ -298,10 +302,9 @@ public class GameScreen extends Screen {
 
 			tChip = mBoard.getChip(targets.get(i));
 			mBoard.setTileHasNothing(targets.get(i));
-			
+
 			tChip.setNextCoord(player.getPoolCoord());
 
-			
 		}
 
 	}

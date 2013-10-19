@@ -1,5 +1,7 @@
 package com.ookamijin.cheskers;
 
+import static java.lang.Math.*;
+
 import android.util.Log;
 
 public abstract class Chip {
@@ -12,6 +14,18 @@ public abstract class Chip {
 
 		coord = new Coord(centerX, centerY);
 
+	}
+
+	public void mathyUpdate() {
+		if (next != null) {
+			coord.mathyCoord(next, V);
+
+			if (abs(coord.getX() - next.getX()) < 5
+					&& abs(coord.getY() - next.getY()) < 5) {
+				coord.set(next);
+				next = old = null;
+			}
+		}
 	}
 
 	public void update() {
@@ -41,11 +55,11 @@ public abstract class Chip {
 					coord.setY(next.getY());
 				}
 			}
-			
+
 			if (coord.getX() == next.getX() && coord.getY() == next.getY()) {
 				next = old = null;
 			}
-			
+
 		}
 
 	}

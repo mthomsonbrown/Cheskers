@@ -1,5 +1,7 @@
 package com.ookamijin.cheskers;
 
+import static java.lang.Math.*;
+
 public class Coord {
 	int x, y;
 
@@ -25,11 +27,23 @@ public class Coord {
 
 	public int[] toIntArray() {
 		int[] tNum = new int[2];
-		
+
 		tNum[0] = x;
 		tNum[1] = y;
 		return tNum;
 
+	}
+
+	//TODO There is something wrong here..lol
+	public void mathyCoord(Coord next, int vel) {
+		double mag;
+		double theta;
+		mag = sqrt(pow(x - next.getX(), 2) + pow(y - next.getY(), 2));
+		mag = mag - vel;
+		theta = atan(y/x);
+		
+		x = (int) (next.getX()+mag*cos(theta));
+		y = (int) (next.getY()+mag*sin(theta));
 	}
 
 	public boolean equals(Coord comp) {
@@ -61,15 +75,27 @@ public class Coord {
 	public void decX(int v) {
 		x = x - v;
 	}
+
 	public void decY(int v) {
 		y = y - v;
 	}
+
 	public void incX(int v) {
 		x = x + v;
 	}
+
 	public void incY(int v) {
 		y = y + v;
 	}
 
+	public void set(Coord next) {
+		x = next.getX();
+		y = next.getY();
+		
+	}
+	
+	public void display() {
+		Uts.debug(x + ", " + y);
+	}
 
 }
