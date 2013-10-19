@@ -122,6 +122,46 @@ public abstract class Player {
 		return nameY;
 	}
 
+	protected void addBufferMoves(Coord startCoord,
+			ArrayList<ArrayList<Coord>> moveList) {
+
+		int x = startCoord.getX();
+		int y = startCoord.getY();
+
+		// up
+		if (y - 1 >= 0) {
+			if (mBoard.tileHasNothing(new Coord(x, y - 1))) {
+				moveList.add(new ArrayList<Coord>());
+				moveList.get(moveList.size() - 1).add(new Coord(x, y));
+				moveList.get(moveList.size() - 1).add(new Coord(x, y - 1));
+			}
+		}
+		// down
+		else if (y + 1 <= 5) {
+			if (mBoard.tileHasNothing(new Coord(x, y + 1))) {
+				moveList.add(new ArrayList<Coord>());
+				moveList.get(moveList.size() - 1).add(new Coord(x, y));
+				moveList.get(moveList.size() - 1).add(new Coord(x, y + 1));
+			}
+		}
+		// left
+		else if (x - 1 >= 0) {
+			if (mBoard.tileHasNothing(new Coord(x - 1, y))) {
+				moveList.add(new ArrayList<Coord>());
+				moveList.get(moveList.size() - 1).add(new Coord(x, y));
+				moveList.get(moveList.size() - 1).add(new Coord(x - 1, y));
+			}
+		}
+		// right
+		else if (x + 1 <= 5) {
+			if (mBoard.tileHasNothing(new Coord(x + 1, y))) {
+				moveList.add(new ArrayList<Coord>());
+				moveList.get(moveList.size() - 1).add(new Coord(x, y));
+				moveList.get(moveList.size() - 1).add(new Coord(x + 1, y));
+			}
+		}
+
+	}
 	public abstract ArrayList<Coord> doRobot(Board mBoard);
 
 	protected abstract ArrayList<ArrayList<Coord>> findAllMoves();
