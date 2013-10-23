@@ -24,8 +24,9 @@ public class LoadingScreen extends Screen {
 
 		Assets.mainMenu = g.newImage("mainMenu.jpg", ImageFormat.RGB565);
 		Assets.background = g.newImage("background.jpg", ImageFormat.RGB565);
-		Assets.hetWin = g.newImage("hetWin.jpg", ImageFormat.RGB565);
-		Assets.homWin = g.newImage("homWin.jpg", ImageFormat.RGB565);
+		Assets.hetWin = g.newImage("hetWin.png", ImageFormat.ARGB4444);
+		Assets.homWin = g.newImage("homWin.png", ImageFormat.ARGB4444);
+		Assets.winBackground = g.newImage("winBackground.jpg", ImageFormat.RGB565);
 		Assets.chipRed = g.newImage("chipRed.png", ImageFormat.ARGB4444);
 		Assets.chipYellow = g.newImage("chipYellow.png", ImageFormat.ARGB4444);
 		Assets.homOn = g.newImage("homOn.png", ImageFormat.ARGB4444);
@@ -33,6 +34,15 @@ public class LoadingScreen extends Screen {
 		Assets.hetOn = g.newImage("hetOn.png", ImageFormat.ARGB4444);
 		Assets.hetOff = g.newImage("hetOff.png", ImageFormat.ARGB4444);
 		Assets.selectScreen = g.newImage("robotScreen.jpg", ImageFormat.RGB565);
+		
+		//animation
+		Assets.fire0 = g.newImage("fire0.png", ImageFormat.ARGB4444);
+		Assets.fire1 = g.newImage("fire1.png", ImageFormat.ARGB4444);
+		Assets.fire2 = g.newImage("fire2.png", ImageFormat.ARGB4444);
+		Assets.fire3 = g.newImage("fire3.png", ImageFormat.ARGB4444);
+		Assets.fire4 = g.newImage("fire4.png", ImageFormat.ARGB4444);
+		Assets.fire5 = g.newImage("fire5.png", ImageFormat.ARGB4444);
+		
 
 		// instructions
 		Assets.instructions = new ArrayList<Image>();
@@ -49,13 +59,13 @@ public class LoadingScreen extends Screen {
 	@Override
 	public void paint(float deltaTime) {
 
-		if (displayCount < 60 || !doneLoading) {
+		if (displayCount < 15 || !doneLoading) {
 			++displayCount;
 			Graphics g = game.getGraphics();
 			g.drawImage(Assets.splash, 0, 0);
-
+ 
 		} else {
-			// TODO for now, just wraps to game screen
+			
 			game.setScreen(new MainMenuScreen(game));
 		}
 

@@ -330,4 +330,12 @@ public class Board {
 		return mTile[coord.x][coord.y].opposite(objectChip);
 	}
 
+	public boolean tileIsBonusYellow(Coord coord) {
+		return mTile[coord.x][coord.y].isBonusYellow();
+	}
+	
+	public boolean tileIsBonusRed(Coord coord) {
+		return mTile[coord.x][coord.y].isBonusRed();
+	}
+
 }

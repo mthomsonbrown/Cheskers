@@ -27,6 +27,7 @@ public class GameScreen extends Screen {
 	private Board mBoard;
 	private Paint paint;
 	private Player player;
+	private int robotThought = 50;
 
 	private PlayerHet hetPlay;
 	private PlayerHom homPlay;
@@ -34,23 +35,6 @@ public class GameScreen extends Screen {
 
 	static final int HET_STARTS = 0;
 	static final int HOM_STARTS = 1;
-
-	/**
-	 * ghost town. i should delete it but it's got sentimental value...
-	 * 
-	 * @param game
-	 */
-	public GameScreen(Game game) {
-		super(game);
-
-		mBoard = new Board();
-		tilePath = new ArrayList<Coord>();
-
-		initChip();
-
-		buildPaint();
-
-	}
 
 	public GameScreen(Game game, int startingPlayer) {
 		super(game);
@@ -65,7 +49,7 @@ public class GameScreen extends Screen {
 		mBoard = new Board();
 		tilePath = new ArrayList<Coord>();
 		loadAssets();
-		// initChip();
+		
 
 		setStartingPlayer(player1, player2);
 
@@ -108,30 +92,22 @@ public class GameScreen extends Screen {
 		homPlay.setBoard(mBoard);
 	}
 
-	private void initChip() {
-		/*
-		 * for (int i = 0; i < 16; ++i) { yellowChips[i] = new
-		 * ChipYellow(Board.topInitX(i), Board.topInitY(i), i);
-		 * 
-		 * redChips[i] = new ChipRed(Board.botInitX(i), Board.botInitY(i), i);
-		 * 
-		 * }
-		 */
-
-	}
-
 	@Override
 	public void update(float deltaTime) {
 
 		mBoard.update();
 
 		if (player.isRobot) {
+			--robotThought;
+			if(robotThought < 1) {
 			debug("player is robot!");
 
 			tilePath = player.doRobot(mBoard);
 			userChip = mBoard.getChip(tilePath.get(0));
 			userChip.setId(mBoard.getTileChipIndex(tilePath.get(0)));
 			processMove();
+			robotThought = 50;
+			}
 		} else
 			handleTouchEvents();
 

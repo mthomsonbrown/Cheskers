@@ -6,14 +6,15 @@ import android.util.Log;
 
 import com.ookamijin.framework.Game;
 import com.ookamijin.framework.Graphics;
-import com.ookamijin.framework.Screen;
-import com.ookamijin.framework.Graphics.ImageFormat;
 import com.ookamijin.framework.Input.TouchEvent;
+import com.ookamijin.framework.Screen;
 
 public class WinningScreen extends Screen {
 
 	Graphics g;
 	Player winner;
+	int height = 480;
+	Animation fire;
 
 	public WinningScreen(Game game) {
 		super(game);
@@ -23,13 +24,21 @@ public class WinningScreen extends Screen {
 	public WinningScreen(Game game, Player winner) {
 		super(game);
 
-		this.winner = winner; 
+		this.winner = winner;
 		g = game.getGraphics();
+		fire = new Animation();
+		fire.addFrame(Assets.fire0, 50);
+		fire.addFrame(Assets.fire1, 50);
+		fire.addFrame(Assets.fire2, 50);
+		fire.addFrame(Assets.fire3, 50);
+		fire.addFrame(Assets.fire4, 50);
+		fire.addFrame(Assets.fire5, 50);
+
 	}
 
 	@Override
 	public void update(float deltaTime) {
-
+		fire.update(5);
 		handleTouchEvents();
 
 	}
@@ -49,11 +58,20 @@ public class WinningScreen extends Screen {
 
 	@Override
 	public void paint(float deltaTime) {
+		g.drawImage(Assets.winBackground, 0, 0);
 
 		if (winner.isHet)
-			g.drawImage(Assets.hetWin, 0, 0);
+			g.drawImage(Assets.hetWin, 0, height);
 		else
-			g.drawImage(Assets.homWin, 0, 0);
+			g.drawImage(Assets.homWin, 0, height);
+
+		if (height > 0)
+			--height;
+
+		/*TODO add fireworks that are in random locations and 
+		 * equal the total number of points ahead the winner was
+		 * */
+		//g.drawImage(fire.getImage(), 500, 250);
 
 	}
 

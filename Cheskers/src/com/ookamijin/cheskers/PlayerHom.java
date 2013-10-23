@@ -96,7 +96,6 @@ public class PlayerHom extends Player {
 
 		debug("in robot movelist size is " + moveList.size());
 
-		
 		return pickPriority(moveList);
 	}
 
@@ -141,7 +140,7 @@ public class PlayerHom extends Player {
 			}
 		}
 		return moveList;
-}
+	}
 
 	private boolean validUpMove(Coord startCoord, Chip objectChip,
 			ArrayList<Coord> mTilePath) {
@@ -219,7 +218,7 @@ public class PlayerHom extends Player {
 
 	private boolean validLeftMove(Coord startCoord, Chip objectChip,
 			ArrayList<Coord> mTilePath) {
-		
+
 		boolean verdict = false;
 		int x = startCoord.getX();
 		int y = startCoord.getY();
@@ -290,5 +289,56 @@ public class PlayerHom extends Player {
 
 		mTilePath = null;
 		return verdict;
+	}
+
+	protected ArrayList<Coord> pickPriority(ArrayList<ArrayList<Coord>> moveList) {
+
+		// sub array of double move options.
+		ArrayList<ArrayList<Coord>> subList = new ArrayList<ArrayList<Coord>>();
+		for (int i = 0; i < moveList.size(); ++i) {
+			if (moveList.get(i).size() > 3) {
+				subList.add(moveList.get(i));
+			}
+		}
+
+		if (subList.size() > 0) {
+			moveList = subList;
+		} else {
+			// no double moves, sub array of single moves with bonus
+			for (int i = 0; i < moveList.size(); ++i) {
+				if (moveList.get(i).size() == 3) {
+					if (isRobotBonus(moveList.get(i)))
+						subList.add(moveList.get(i));
+				}
+			}
+		}
+		if (subList.size() > 0) {
+			moveList = subList;
+		} else {
+			// no bonuses, sub array of single moves
+			for (int i = 0; i < moveList.size(); ++i) {
+				if (moveList.get(i).size() == 3)
+					subList.add(moveList.get(i));
+			}
+		}
+		if (subList.size() > 0)
+			moveList = subList;
+
+		if (moveList.size() > 1)
+			tilePath = moveList.get(gen.nextInt(moveList.size() - 1));
+		else
+			tilePath = moveList.get(0);
+
+		return tilePath;
+	}
+
+	private boolean isRobotBonus(ArrayList<Coord> tilePath) {
+		if (mBoard.tileHasRed(tilePath.get(0))
+				&& mBoard.tileIsBonusRed(tilePath.get(2)))
+			return true;
+		if (mBoard.tileHasYellow(tilePath.get(0))
+				&& mBoard.tileIsBonusYellow(tilePath.get(2)))
+			return true;
+		return false;
 	}
 }
