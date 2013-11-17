@@ -9,7 +9,7 @@ public class PlayerHom extends Player {
 
 		name = "Homogenus";
 		isHom = true;
-		scoreLocation = new Coord(720, 120);
+		scoreLocation = new Coord(720, 123);
 		poolBounds.set(680, 200, 760, 380);
 
 		nameX = 640;
@@ -21,7 +21,7 @@ public class PlayerHom extends Player {
 
 		name = "Homogenus";
 		isHom = true;
-		scoreLocation = new Coord(720, 120);
+		scoreLocation = new Coord(720, 123);
 		poolBounds.set(680, 200, 760, 380);
 
 		nameX = 640;
