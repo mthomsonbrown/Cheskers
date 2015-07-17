@@ -2,6 +2,12 @@ package com.ookamijin.cheskers;
 
 import java.util.ArrayList;
 
+/**
+ * This class contains definitions for heterogeneous player rules, as well as an
+ * automated "best choice" algorithm for player vs. robot mode.
+ *
+ * @author Mike Brown
+ */
 public class PlayerHet extends Player {
 
 	public PlayerHet(Board gameBoard) {
@@ -26,6 +32,17 @@ public class PlayerHet extends Player {
 		nameY = 0;
 	}
 
+	/**
+	 * Determines if a move is valid based on the heterogeneous rules.
+     *
+	 * @param tilePath An ArrayList of coordinate values representing tiles visited in move.
+     *                 List starts with the tile the chip was on and ends with the tile the chip
+     *                 has been moved to.
+	 * @param userChip A reference to the chip being moved.
+	 * @param targets A list of coordinates of the chips that have legitimately been taken by the
+     *                userChip.
+	 * @return True if valid move, false if invalid.
+	 */
 	@Override
 	public boolean isValid(ArrayList<Coord> tilePath, Chip userChip,
 			ArrayList<Coord> targets) {
@@ -54,6 +71,18 @@ public class PlayerHet extends Player {
 		return verdict;
 	}
 
+    /**
+     * This method receives a subset of one move (three tiles visited) and determines if
+     * the move was legal.
+     *
+     * @param tilePath An ArrayList of three coordinate values representing tiles visited in move.
+     *                 List starts with the tile the chip was on and ends with the tile the chip
+     *                 has been moved to.
+     * @param userChip A reference to the chip being moved.
+     * @param targets A list of coordinates of the chips that have legitimately been taken by the
+     *                userChip.
+     * @return True if valid move, false if invalid.
+     */
 	private boolean oneJump(ArrayList<Coord> tilePath, Chip userChip,
 			ArrayList<Coord> targets) {
 
@@ -73,6 +102,15 @@ public class PlayerHet extends Player {
 		return verdict;
 	}
 
+    /**
+     * Determines if the last tile visited counts as a bonus tile in heterogeneous rules.
+     *
+     * @param tilePath An ArrayList of coordinate values representing tiles visited in move.
+     *                 List starts with the tile the chip was on and ends with the tile the chip
+     *                 has been moved to.
+     * @param userChip A reference to the chip being moved.
+     * @return True if move grants a bonus, false if not.
+     */
 	@Override
 	public boolean isBonus(ArrayList<Coord> tilePath, Chip userChip) {
 
@@ -84,6 +122,12 @@ public class PlayerHet extends Player {
 		return mTile.isBonusRed();
 	}
 
+    /**
+     * Method that simulates player movement, returning a tilePath chosen by the robot algorithm.
+     *
+     * @param mBoard A reference to the board object.
+     * @return A tilePath chosen by the robot algorithm.
+     */
 	@Override
 	public ArrayList<Coord> doRobot(Board mBoard) {
 
@@ -95,6 +139,12 @@ public class PlayerHet extends Player {
 		return pickPriority(moveList);
 	}
 
+    /**
+     * This method is implemented by the robot algorithm to find all possible moves a
+     * player could make.
+     *
+     * @return An ArrayList of valid tilePaths.
+     */
 	@Override
 	protected ArrayList<ArrayList<Coord>> findAllMoves() {
 		ArrayList<ArrayList<Coord>> moveList = new ArrayList<ArrayList<Coord>>();
@@ -138,6 +188,16 @@ public class PlayerHet extends Player {
 		return moveList;
 	}
 
+    /**
+     * Used by robot to determine if an upward move was valid.
+     *
+     * @param startCoord Reference of first coord in tilePath.
+     * @param objectChip A reference to the chip being moved.
+     * @param mTilePath An ArrayList of coordinate values representing tiles visited in move.
+     *                 List starts with the tile the chip was on and ends with the tile the chip
+     *                 has been moved to.
+     * @return True if valid move, false if not.
+     */
 	private boolean validUpMove(Coord startCoord, Chip objectChip,
 			ArrayList<Coord> mTilePath) {
 
@@ -175,6 +235,16 @@ public class PlayerHet extends Player {
 		return verdict;
 	}
 
+    /**
+     * Used by robot to determine if a downward move was valid.
+     *
+     * @param startCoord Reference of first coord in tilePath.
+     * @param objectChip A reference to the chip being moved.
+     * @param mTilePath An ArrayList of coordinate values representing tiles visited in move.
+     *                 List starts with the tile the chip was on and ends with the tile the chip
+     *                 has been moved to.
+     * @return True if valid move, false if not.
+     */
 	private boolean validDownMove(Coord startCoord, Chip objectChip,
 			ArrayList<Coord> mTilePath) {
 
@@ -214,6 +284,16 @@ public class PlayerHet extends Player {
 		return verdict;
 	}
 
+    /**
+     * Used by robot to determine if move to the left was valid.
+     *
+     * @param startCoord Reference of first coord in tilePath.
+     * @param objectChip A reference to the chip being moved.
+     * @param mTilePath An ArrayList of coordinate values representing tiles visited in move.
+     *                 List starts with the tile the chip was on and ends with the tile the chip
+     *                 has been moved to.
+     * @return True if valid move, false if not.
+     */
 	private boolean validLeftMove(Coord startCoord, Chip objectChip,
 			ArrayList<Coord> mTilePath) {
 
@@ -251,6 +331,16 @@ public class PlayerHet extends Player {
 		return verdict;
 	}
 
+    /**
+     * Used by robot to determine if move to the right was valid.
+     *
+     * @param startCoord Reference of first coord in tilePath.
+     * @param objectChip A reference to the chip being moved.
+     * @param mTilePath An ArrayList of coordinate values representing tiles visited in move.
+     *                 List starts with the tile the chip was on and ends with the tile the chip
+     *                 has been moved to.
+     * @return True if valid move, false if not.
+     */
 	private boolean validRightMove(Coord startCoord, Chip objectChip,
 			ArrayList<Coord> mTilePath) {
 
@@ -289,6 +379,12 @@ public class PlayerHet extends Player {
 		return verdict;
 	}
 
+    /**
+     * Method of the robot algorithm to pick the best possible move.
+     *
+     * @param moveList List of tilePath objects, which are ArrayLists of Coord objects.
+     * @return The tilePath chosen by the algorithm.
+     */
 	protected ArrayList<Coord> pickPriority(ArrayList<ArrayList<Coord>> moveList) {
 
 		// sub array of double move options.
@@ -330,6 +426,14 @@ public class PlayerHet extends Player {
 		return tilePath;
 	}
 
+    /**
+     * Determines if the last tile visited counts as a bonus tile in heterogeneous rules.
+     *
+     * @param tilePath An ArrayList of coordinate values representing tiles visited in move.
+     *                 List starts with the tile the chip was on and ends with the tile the chip
+     *                 has been moved to.
+     * @return True if move grants a bonus, false if not.
+     */
 	private boolean isRobotBonus(ArrayList<Coord> tilePath) {
 		if (mBoard.tileHasRed(tilePath.get(0))
 				&& mBoard.tileIsBonusYellow(tilePath.get(2)))
