@@ -7,7 +7,7 @@ public class PlayerHom extends Player {
 	public PlayerHom(Board gameBoard) {
 		super(gameBoard);
 
-		name = "Homogenus";
+		name = "Homogeneous";
 		isHom = true;
 		scoreLocation = new Coord(720, 123);
 		poolBounds.set(680, 200, 760, 380);
@@ -19,7 +19,7 @@ public class PlayerHom extends Player {
 	public PlayerHom() {
 		super();
 
-		name = "Homogenus";
+		name = "Homogeneous";
 		isHom = true;
 		scoreLocation = new Coord(720, 123);
 		poolBounds.set(680, 200, 760, 380);
@@ -93,8 +93,6 @@ public class PlayerHom extends Player {
 		ArrayList<ArrayList<Coord>> moveList;
 
 		moveList = findAllMoves();
-
-		debug("in robot movelist size is " + moveList.size());
 
 		return pickPriority(moveList);
 	}
@@ -336,6 +334,7 @@ public class PlayerHom extends Player {
 		if (mBoard.tileHasRed(tilePath.get(0))
 				&& mBoard.tileIsBonusRed(tilePath.get(2)))
 			return true;
+
 		if (mBoard.tileHasYellow(tilePath.get(0))
 				&& mBoard.tileIsBonusYellow(tilePath.get(2)))
 			return true;

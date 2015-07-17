@@ -16,18 +16,6 @@ public abstract class Chip {
 
 	}
 
-	public void mathyUpdate() {
-		if (next != null) {
-			coord.mathyCoord(next, V);
-
-			if (abs(coord.getX() - next.getX()) < 5
-					&& abs(coord.getY() - next.getY()) < 5) {
-				coord.set(next);
-				next = old = null;
-			}
-		}
-	}
-
 	public void update() {
 		if (next != null) {
 			if (old.getX() > next.getX()) {

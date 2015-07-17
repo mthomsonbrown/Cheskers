@@ -43,13 +43,13 @@ public class Board {
 					break;
 				}
 
-				// TODO don't know if this will work correctly
 				if (j == 2 && i == 2 || j == 2 && i == 3 || j == 3 && i == 2
 						|| j == 3 && i == 3) {
 					mTile[i][j].setHasNothing(true);
 				}
 			}
 		}
+
 		// initialize chip ids
 		int yellow = 0;
 		int red = 0;
@@ -88,17 +88,14 @@ public class Board {
 					Board.topInitY(i), i);
 
 			redChips[i] = new ChipRed(Board.botInitX(i), Board.botInitY(i), i);
-
 		}
-
 	}
 
 	public void update() {
 		for (int i = 0; i < 16; ++i) {
 			yellowChips[i].update();
 
-			redChips[i].update();  
-
+			redChips[i].update();
 		}
 	}
 
@@ -158,46 +155,6 @@ public class Board {
 
 	}
 
-	/**
-	 * 
-	 * @param event
-	 * @return returns the center X value for the board square
-	 */
-	public static int getXCoord(TouchEvent event) {
-
-		if (event.x <= 240)
-			return Board.x[0];
-		else if (event.x <= 320)
-			return Board.x[1];
-		else if (event.x <= 400)
-			return Board.x[2];
-		else if (event.x <= 480)
-			return Board.x[3];
-		else if (event.x <= 560)
-			return Board.x[4];
-		else if (event.x <= 640)
-			return Board.x[5];
-
-		return 0;
-	}
-
-	public static int getYCoord(TouchEvent event) {
-		if (event.y <= 80)
-			return Board.y[0];
-		else if (event.y <= 160)
-			return Board.y[1];
-		else if (event.y <= 240)
-			return Board.y[2];
-		else if (event.y <= 320)
-			return Board.y[3];
-		else if (event.y <= 400)
-			return Board.y[4];
-		else if (event.y <= 480)
-			return Board.y[5];
-
-		return 0;
-	}
-
 	public Coord getTileIndex(TouchEvent event) {
 
 		Coord coords = new Coord(-1, -1);
@@ -220,22 +177,16 @@ public class Board {
 
 	public boolean tileIsEmpty(Coord coord) {
 
-		if (mTile[coord.x][coord.y].hasNothing())
-			return true;
-		return false;
+		return mTile[coord.x][coord.y].hasNothing();
 	}
 
 	public boolean tileHasRed(Coord coord) {
-		if (mTile[coord.x][coord.y].hasRed())
-			return true;
-		return false;
+
+		return mTile[coord.x][coord.y].hasRed();
 	}
 
 	public boolean tileHasYellow(Coord coord) {
-
-		if (mTile[coord.x][coord.y].hasYellow())
-			return true;
-		return false;
+        return mTile[coord.x][coord.y].hasYellow();
 	}
 
 	public void setTileHasNothing(Coord coord) {
@@ -283,11 +234,6 @@ public class Board {
 			status += "0";
 		status += mTile[coord.x][coord.y].getChipIndex();
 		return status;
-	}
-
-	public boolean tileIsBonus(Coord tile) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	public Tile getTile(Coord coord) {

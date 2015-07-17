@@ -28,7 +28,6 @@ public class PlayerSelectScreen extends Screen {
 	@Override
 	public void update(float deltaTime) {
 		handleTouchEvents();
-
 	}
 
 	private void handleTouchEvents() {
@@ -58,8 +57,6 @@ public class PlayerSelectScreen extends Screen {
 					game.setScreen(new GameScreen(game, player1, player2));
 				}
 			}
-			
-
 		}
 	}
 

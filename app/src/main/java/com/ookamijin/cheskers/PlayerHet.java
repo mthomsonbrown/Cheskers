@@ -7,7 +7,7 @@ public class PlayerHet extends Player {
 	public PlayerHet(Board gameBoard) {
 		super(gameBoard);
 
-		name = "Heterogenus";
+		name = "Heterogeneous";
 		isHet = true;
 		scoreLocation = new Coord(80, 123);
 		poolBounds.set(40, 200, 120, 360);
@@ -18,7 +18,7 @@ public class PlayerHet extends Player {
 	public PlayerHet() {
 		super();
 
-		name = "Heterogenus";
+		name = "Heterogeneous";
 		isHet = true;
 		scoreLocation = new Coord(80, 123);
 		poolBounds.set(40, 200, 120, 360);
@@ -47,7 +47,6 @@ public class PlayerHet extends Player {
 				for (int j = 0; j < 3; ++j) {
 					subCoord.add(tilePath.get(i * 2 + j));
 				}
-
 				verdict = oneJump(subCoord, userChip, targets);
 			}
 		}
@@ -70,6 +69,7 @@ public class PlayerHet extends Player {
 			++score;
 			targets.add(tilePath.get(1));
 		}
+
 		return verdict;
 	}
 
@@ -91,18 +91,6 @@ public class PlayerHet extends Player {
 		ArrayList<ArrayList<Coord>> moveList;
 
 		moveList = findAllMoves();
-		// start debug
-		debug("in robot movelist size is " + moveList.size());
-
-		for (int i = 0; i < moveList.size(); ++i) {
-			debug("move " + i + " is: ");
-			debug("its size is " + moveList.get(i).size());
-			ArrayList<Coord> move = moveList.get(i);
-			for (int j = 0; j < move.size(); ++j) {
-				move.get(j).display();
-			}
-		}
-		// end debug
 
 		return pickPriority(moveList);
 	}
@@ -346,6 +334,7 @@ public class PlayerHet extends Player {
 		if (mBoard.tileHasRed(tilePath.get(0))
 				&& mBoard.tileIsBonusYellow(tilePath.get(2)))
 			return true;
+
 		if (mBoard.tileHasYellow(tilePath.get(0))
 				&& mBoard.tileIsBonusRed(tilePath.get(2)))
 			return true;
